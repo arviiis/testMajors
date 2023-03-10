@@ -32,7 +32,7 @@ public class ProductAgent extends Agent {
 		// Printout a welcome message
 		System.out.println("Product \"" + arg1 + "\" agent: \"" + getAID().getName() + "\" is ready.");
 
-//		Jade.addThAgent();
+//		Jade.addThAgent(1);
 
 	}
 }
