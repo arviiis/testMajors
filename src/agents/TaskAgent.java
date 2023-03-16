@@ -1,5 +1,9 @@
 package agents;
 
+import java.util.Arrays;
+import java.util.List;
+
+import behaviours.WorkRequestPerformer;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -7,35 +11,68 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.core.behaviours.*;
 
 public class TaskAgent extends Agent {
-	
+
 	// The list of known operational agents
-	private AID[] stackerAgents;
-	private AID[] moverAgents;
-	private AID[] wrapperAgents;
+	private AID[] availableAgents;
+	private AID supervisorAgent;
+//	private AID[] moverAgents;
+//	private AID[] wrapperAgents;
+
+	
+	private String serviceType;
+	private String requiredSkill;
+	private int requestInterval = 5000;
 
 	protected void setup() {
 
-		// Printout a welcome message
-		System.out.println("Task agent: \"" + getAID().getName() + "\" is ready.");
-		
-		// returns one agent with the specified service
-		AID agent = getService("supervisor");
-		System.out.println("\nSupervisor: " + (agent == null ? "not Found" : agent.getName()));
+		// 1. Get agent arguments passed from the PH agent
+		Object[] args = getArguments();
+		String type = args[0].toString(); // this returns the type of product this PH agent represents
+		String[] productInfo = (String[]) args[1];// info about the product
 
-		agent = getService("stacker");
-		System.out.println("\nStacker: " + (agent == null ? "not Found" : agent.getName()));
+//		String arg3 = args[2].toString(); 
+
 		
-		// returns all the agents with the specified service
-		AID[] buyers = searchDF("stacker");
-		System.out.print("\nSTACKERS: ");
-		for (int i = 0; i < buyers.length; i++)
-			System.out.print(buyers[i].getLocalName() + ",  ");
-		System.out.println();
+		
+		// 2. Printout a welcome message
+		System.out.println("Task agent for product \"" + type + "\": \"" + getAID().getName() + "\" is ready.");
+
+		for (int i = 0; i < productInfo.length; i++) {
+			System.out.println(i + "th list member is: "+ productInfo[i]);
+		}
+		
+		// 3. Get supervisor agent
+		// returns one agent with the specified service
+		supervisorAgent = getService("supervisor");
+//		System.out.println("\nSupervisor: " + (supervisorAgent == null ? "not Found" : supervisorAgent.getName()));
+
+		// 4. Set the type of service to look for(stacker, mover, wrapper)
+		serviceType = "stacker";
+		requiredSkill = "pA";
+
+		// 5. Add TH agent behaviour
+//		addBehaviour(new WorkRequestPerformer());
+		// run the behaviour periodically
+		addBehaviour(new TickerBehaviour(this, requestInterval) {
+			protected void onTick() {
+				System.out.println("\n" + getAID().getLocalName() + " looking for service: " + serviceType);
+				// get all the agents that offer the service
+				availableAgents = searchDF(serviceType);
+				System.out.print(serviceType + " agents available for " + getAID().getLocalName() + ": ");
+				for (int i = 0; i < availableAgents.length; i++)
+					System.out.print(availableAgents[i].getLocalName() + ",  ");
+				System.out.println();
+				// request price offers from OH Agents
+				addBehaviour(new WorkRequestPerformer(availableAgents, requiredSkill));
+			}
+		});
 
 	}
 
+	// what to do when agent dies
 	// Put agent clean-up operations here
 	protected void takeDown() {
 		// Deregister from the yellow pages
@@ -48,7 +85,7 @@ public class TaskAgent extends Agent {
 		System.out.println("Task agent: \"" + getAID().getName() + "\" terminating.");
 	}
 
-	// returns one search result
+	// return one agent with the specified service
 	AID getService(String service) {
 		DFAgentDescription dfd = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
@@ -87,4 +124,5 @@ public class TaskAgent extends Agent {
 
 		return null;
 	}
+
 }

@@ -1,5 +1,7 @@
 package def;
 
+import java.util.List;
+
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -36,17 +38,19 @@ public class Jade {
 
 	}
 
-	public static void addPhAgent(int qty, String pType) {
+	// Create Product holon agent
+	public static void addPhAgent(int qty, String type) {
 
-		String agentName = "PH Agent_" + pType;
+		String agentName = "PH Agent_" + type;
 
-		Object[] args = new String[3];
-		args[0] = pType; // one of 3 options: A, B, C.
+		Object[] args = new Object[3];
+		args[0] = type; // one of 3 options: A, B, C.
 
 		for (int i = 0; i < qty; i++) {
 			try {
 				// Start a product agent for each product that was ordered from GUI
 				ac = cc.createNewAgent(agentName + (i + 1), "agents.ProductAgent", args);
+				args[1] = (i + 1); //
 				// Start the agents
 				ac.start();
 			} catch (StaleProxyException spe) {
@@ -58,11 +62,18 @@ public class Jade {
 	}
 
 	// Create Task holon agent
-	public static void addThAgent(int qty) {
+	public static void addThAgent(int qty, String type, int phId, String[] productInfo) {
+
+		String agentName = "TH Agent_" + type;
+
+		Object[] args = new Object[3];
+		args[0] = type; // one of 3 options: A, B, C.
+		args[1] = productInfo;
+
 		for (int i = 0; i < qty; i++) {
 			try {
 				// Add SH agent to the platform
-				ac = cc.createNewAgent("TH agent_" + (i + 1), "agents.TaskAgent", null);
+				ac = cc.createNewAgent(agentName + phId, "agents.TaskAgent", args);
 				// Start the agents
 				ac.start();
 			} catch (StaleProxyException spe) {
@@ -99,8 +110,8 @@ public class Jade {
 		args[2] = mfgTime;
 
 		try {
-				// Add SH agent to the platform
-				ac = cc.createNewAgent("OH agent"+id, "agents.OperationalAgent", args);
+			// Add SH agent to the platform
+			ac = cc.createNewAgent(type + id, "agents.OperationalAgent", args);
 			// Start the agents
 			ac.start();
 		} catch (StaleProxyException spe) {
@@ -109,30 +120,31 @@ public class Jade {
 			System.out.println(spe.getMessage());
 		}
 	}
-	
+
 	// define the type of OH agents to add
 	static void addOhAgents() {
-		
-		String[] products = { "none" };
-		String[] products1 = { "pA" };
-		String[] products2 = { "pB" };
-		String[] products3 = { "pC" };
-		String[] products4 = { "pA", "pB" };
-		
-		int[] mfgTime = {0};
-		int[] mfgTime1 = {25};
-		int[] mfgTime2 = {45};
-		int[] mfgTime3 = {30};
-		int[] mfgTime4 = {35,30};
-		int[] mfgTime5 = {10};
-		
-		addOhAgent(1,"stacker", products1, mfgTime1);
-		addOhAgent(2,"stacker", products2, mfgTime2);
-		addOhAgent(3,"stacker", products3, mfgTime3);
-		addOhAgent(4,"stacker", products4, mfgTime4);
 
-		addOhAgent(5,"wrapper", products1, mfgTime5);
-		addOhAgent(6,"mover", products, mfgTime);
+		// products the OH agent has skills to work with
+		String[] skills = { "none" }; 
+		String[] skills1 = { "pA" };
+		String[] skills2 = { "pB" };
+		String[] skills3 = { "pC" };
+		String[] skills4 = { "pA", "pB" };
+
+		// how long it takes to complete each skill
+		int[] mfgTime = { 0 };
+		int[] mfgTime1 = { 25 };
+		int[] mfgTime2 = { 45 };
+		int[] mfgTime3 = { 30 };
+		int[] mfgTime4 = { 35, 30 };
+		int[] mfgTime5 = { 10 };
+
+		addOhAgent(1, "stacker", skills1, mfgTime1);
+		addOhAgent(2, "stacker", skills2, mfgTime2);
+//		addOhAgent(3, "stacker", products3, mfgTime3);
+		addOhAgent(4, "stacker", skills4, mfgTime4);
+
+		addOhAgent(5, "wrapper", skills1, mfgTime5);
+		addOhAgent(6, "mover", skills, mfgTime);
 	}
-
 }

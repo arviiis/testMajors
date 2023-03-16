@@ -15,48 +15,63 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import behaviours.InfoAboutWinningOH;
 import behaviours.OperationalAgentBehaviour;
-
+import behaviours.WorkAcceptenceHandler;
+import behaviours.WorkAnnouncementHandler;
 
 public class OperationalAgent extends Agent {
 
-//	// The catalogue of books for sale (maps the title of a book to its price)
-//	private Hashtable catalogue;
-	
-	// The list of known task agents
-	private AID[] taskAgents;
-	
-	private String type;
-	private String[] products;
+	private Hashtable catalogue; // catalogue of agents capabilities (product: mfgTime). How long it takes to complete each task
+	private Hashtable priceCatalogue;// catalogue with the prices offered for each capability
+	private Hashtable bestPriceCatalogue;// catalogue with the best prices (winning prices) for each capability
+
+//	// The list of known task agents
+//	private AID[] taskAgents;
+	private String serviceType;
+	private String[] skills; // products that this service type OH agent has skills to work with
 	private int[] mfgTime;
 
 	// Put agent initializations here
 	protected void setup() {
-		
-		// 1. Printout a welcome message
-		System.out.println("Operational agent: \""+getAID().getName()+"\" is ready.");
-		
-		// 2. get agent arguments
+
+		// initialize hashtables
+		catalogue = new Hashtable(); 
+		priceCatalogue = new Hashtable(); 
+		bestPriceCatalogue = new Hashtable();
+
+		// 1. get agent arguments (set when creating the agent)
 		Object[] args = getArguments();
 
 		if (args != null && args.length > 0) {
-			type = (String) args[0]; // OH type
-			products = (String[]) args[1]; // type of products it can stack		
+			serviceType = (String) args[0]; // OH type
+			skills = (String[]) args[1]; // type of products it can stack
 			mfgTime = (int[]) args[2]; // how long it takes to finish stacking
-		}	
-//		System.out.println(type);
-//		System.out.println(Arrays.toString(products));
-//		System.out.println(mfgTime);
+		}
 		
-		// 3. Register the OH agent services in the yellow pages
-		register(type);
+		// 2. Update agents catalogue with products it can work with and time it takes to finish the task
+		for (int i = 0; i < skills.length; i++) {
+			catalogue.put((String) skills[i],new Integer (mfgTime[i]));
+		}
 		
-		// 4. Add the OH agent behaviour
+		// 3. Printout a welcome message
+		System.out.println("Operational  agent: \"" + getAID().getName() + "\" is ready."
+				+ "\nOffered service: \"" + serviceType + "\"\n"
+						+ "Skills: " +catalogue);
 		
-		addBehaviour(new OperationalAgentBehaviour(this));
+		// 4. Register the OH agent services in the yellow pages
+		register(serviceType);
 
-
-
+		// 5. Add the OH agent behaviour
+//		addBehaviour(new OperationalAgentBehaviour(this));
+		// Handle the work offers issued by TH Agent
+		addBehaviour(new WorkAnnouncementHandler(catalogue, skills));
+		// What to do once an accept proposal from TH agent has been received
+		addBehaviour(new WorkAcceptenceHandler(catalogue));
+		// receive inform messages aboout the offer that won from other OH agents
+//		addBehaviour(new InfoAboutWinningOH(bestPriceCatalogue));
+		
+		
 	}
 
 	// Put agent clean-up operations here
@@ -68,16 +83,15 @@ public class OperationalAgent extends Agent {
 			fe.printStackTrace();
 		}
 		// Printout a dismissal message
-		System.out.println("Operational agent: \""+getAID().getName()+"\" terminating.");
+		System.out.println("Operational agent: \"" + getAID().getName() + "\" terminating.");
 	}
 
 	// Registers agents services to the DF
-	void register(String type)
-	{
+	void register(String serviceType) {
 		DFAgentDescription dfd = new DFAgentDescription();
 		// set service parameters
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType(type);
+		sd.setType(serviceType);
 		sd.setName(getLocalName());
 		dfd.setName(getAID());
 //		// set service properties
@@ -90,15 +104,15 @@ public class OperationalAgent extends Agent {
 			// tests if there are old duplicate DF entries before adding a new one
 			DFAgentDescription list[] = DFService.search(this, dfd);
 			if (list.length > 0)
-				DFService.deregister(this);	
+				DFService.deregister(this);
 			// add the new service
 			dfd.addServices(sd);
 			DFService.register(this, dfd);
 		} catch (FIPAException fe) {
 			fe.printStackTrace();
-            System.out.println("\n\n\t"+"The msg from the DF is"+fe.getACLMessage().getContent()+"and the cause is "+fe.getCause());
+			System.out.println("\n\n\t" + "The msg from the DF is" + fe.getACLMessage().getContent()
+					+ "and the cause is " + fe.getCause());
 		}
 	}
-	
-	
+
 }

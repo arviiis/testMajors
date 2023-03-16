@@ -12,9 +12,10 @@ public class OperationalAgentBehaviour extends CyclicBehaviour{
 		a = this.a;
 	}
 	
-	@Override
+	
 	public void action() {
 		// We decide to stop the paraBehav as soon as one of its children is done.
 		ParallelBehaviour OHbehaviour = new ParallelBehaviour(a,ParallelBehaviour.WHEN_ANY);
+//		OHbehaviour.addSubBehaviour(new WorkAnnouncementHandler());
 	}
 }
