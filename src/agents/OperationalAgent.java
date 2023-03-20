@@ -5,6 +5,7 @@ import jade.core.Agent;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import schedule.MyTimerTask;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -22,11 +23,12 @@ import behaviours.WorkAnnouncementHandler;
 
 public class OperationalAgent extends Agent {
 
-	private Hashtable catalogue; // catalogue of agents capabilities (product: mfgTime). How long it takes to complete each task
-	public  Hashtable priceCatalogue;// catalogue with the prices offered for each capability
-	public 	Hashtable bestPriceCatalogue;// catalogue with the best prices (winning prices) for each capability
+	public Hashtable catalogue; // catalogue of agents capabilities (product: mfgTime). How long it takes to complete each task
+	public Hashtable priceCatalogue;// catalogue with the prices offered for each capability
+	public Hashtable bestPriceCatalogue;// catalogue with the best prices (winning prices) for each capability
 	
 	public Hashtable operationSequence; // tA name: skill, time
+	public Timer timer; // timer that keeps track of OH schedule
 
 //	// The list of known task agents
 //	private AID[] taskAgents;
@@ -37,13 +39,16 @@ public class OperationalAgent extends Agent {
 	public static int priceA;
 	public String requiredSkill;
 	
-	// Put agent initializations here
+	// Put agent initialisations here
 	protected void setup() {
 		
-		// initialize hashtables
+		// initialise hashtables
 		catalogue = new Hashtable(); 
 		priceCatalogue = new Hashtable(); 
 		bestPriceCatalogue = new Hashtable();
+		
+		// initialise timer as deamon thread
+		timer = new Timer(true);
 
 		// 1. get agent arguments (set when creating the agent)
 		Object[] args = getArguments();
@@ -58,7 +63,6 @@ public class OperationalAgent extends Agent {
 		for (int i = 0; i < skills.length; i++) {
 			catalogue.put((String) skills[i],new Integer (mfgTime[i]));
 		}
-		// 3. Update prices 
 		
 		// 3. Printout a welcome message
 		System.out.println("Operational  agent: \"" + getAID().getName() + "\" is ready."
@@ -75,8 +79,10 @@ public class OperationalAgent extends Agent {
 		addBehaviour(new WorkAnnouncementHandler(this, skills));
 		// What to do once an accept proposal from TH agent has been received
 		addBehaviour(new WorkAcceptenceHandler(this));
-		// receive inform messages aboout the offer that won from other OH agents
+		// receive inform messages about the offer that won from other OH agents
 		addBehaviour(new InfoAboutWinningOH(this));
+		
+		
 	}
 
 	// Put agent clean-up operations here

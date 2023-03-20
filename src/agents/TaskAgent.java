@@ -21,6 +21,7 @@ public class TaskAgent extends Agent {
 	private AID[] availableAgents;
 	private AID supervisorAgent;
 
+	
 	public List<Object> operationList = new ArrayList<>();
 	
 	private String serviceType;

@@ -1,11 +1,14 @@
 package behaviours;
 
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.TimerTask;
 
 import agents.OperationalAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import schedule.MyTimerTask;
 
 public class WorkAcceptenceHandler extends CyclicBehaviour {
 	
@@ -32,10 +35,9 @@ public class WorkAcceptenceHandler extends CyclicBehaviour {
 				reply.setPerformative(ACLMessage.INFORM); // send an inform message to TH, to inform that the deal is done
 				System.out.println("Work sold to agent " + msg.getSender().getLocalName());
 				
-				
-				
-				
-				
+//		        TimerTask timerTask1 = new MyTimerTask((Integer) opA.catalogue.get(requiredSkill));
+//		        opA.timer.schedule(timerTask1, 20*1000);
+//		        System.out.println("TimerTask1 scheduled placed in the schedule at "+ new Date());
 				
 				
 			} else {

@@ -127,7 +127,7 @@ public class WorkRequestPerformer extends Behaviour {
 				if (reply.getPerformative() == ACLMessage.INFORM) {
 					// Purchase successful. We can terminate
 					System.out.println(requiredSkill + " successfully purchased from agent " + reply.getSender().getLocalName()+" for price: "+ bestPrice);
-					tA.operationList.add(reply.getSender().getLocalName());
+					tA.operationList.add(reply.getSender().getLocalName()); // 
 				} else {
 					System.out.println("Attempt failed: requested wo already sold.");
 				}
