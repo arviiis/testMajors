@@ -2,6 +2,7 @@ package behaviours;
 
 import java.util.Hashtable;
 
+import agents.OperationalAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -10,24 +11,27 @@ import jade.lang.acl.MessageTemplate;
 
 public class InfoAboutWinningOH extends CyclicBehaviour {
 	
-	private Hashtable bestPriceCatalogue;
+	String requiredSkill;
+	OperationalAgent opA;
 	
-	public InfoAboutWinningOH(Hashtable bestPriceCatalogue) {
-		this.bestPriceCatalogue = bestPriceCatalogue;
+	
+	public InfoAboutWinningOH(OperationalAgent opA) {
+		this.opA = opA;
 	}
 
 	public void action() {
-		// Receive the purchase order reply
+		// Receive the info message from TH containing info about the best price
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage msg = myAgent.receive(mt);
 		if (msg != null) {
 			// Purchase order reply received
 			if (msg.getPerformative() == ACLMessage.INFORM) {
-//						String title = msg.getContent();
-				int price = Integer.parseInt(msg.getContent());
-				updateBestPriceCatalogue("Job1", price);
+//				String title = msg.getContent();
+				int bestPrice = Integer.parseInt(msg.getContent());
+				requiredSkill = opA.requiredSkill;
+				updateBestPriceCatalogue(requiredSkill, bestPrice);
 			} else {
-				System.out.println("something");
+				System.out.println("Message performative mismatch");
 			}
 		} else {
 			block();
@@ -35,18 +39,18 @@ public class InfoAboutWinningOH extends CyclicBehaviour {
 	}
 	
 	// updates the catalogue with the best price for the respective product
-	public void updateBestPriceCatalogue(final String title, final int bestPrice) {
+	public void updateBestPriceCatalogue(final String skill, final int bestPrice) {
 		
-		// get the previously saved best price for the product
-		Integer previousBest = (Integer) bestPriceCatalogue.get(title);
+		// check if this skill had a price in the best price catalogue and update it
+		Integer previousBestPrice = (Integer) opA.bestPriceCatalogue.get(skill);
 		
-		if (previousBest != null) {
-			bestPriceCatalogue.replace(title, new Integer(bestPrice));
-//			System.out.println(title+" replaced in best price catalogue. New best price = "+ bestPrice);
-		}
-		else {
-			bestPriceCatalogue.put(title, new Integer(bestPrice));
-//			System.out.println(title+" inserted into best price catalogue. New best price = "+bestPrice);
+		if (previousBestPrice != null) {
+			opA.bestPriceCatalogue.replace(skill, bestPrice);
+			System.out.println(requiredSkill + " changed price in " + myAgent.getLocalName()
+					+ " best price catalogue: " + opA.bestPriceCatalogue);
+		} else {
+			opA.bestPriceCatalogue.put(skill, bestPrice); // update the best price of the skill in the catalogue
+			System.out.println(myAgent.getLocalName() + " best price catalogue: " + opA.bestPriceCatalogue);
 		}
 	}
 } 

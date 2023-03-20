@@ -23,18 +23,23 @@ import behaviours.WorkAnnouncementHandler;
 public class OperationalAgent extends Agent {
 
 	private Hashtable catalogue; // catalogue of agents capabilities (product: mfgTime). How long it takes to complete each task
-	private Hashtable priceCatalogue;// catalogue with the prices offered for each capability
-	private Hashtable bestPriceCatalogue;// catalogue with the best prices (winning prices) for each capability
+	public  Hashtable priceCatalogue;// catalogue with the prices offered for each capability
+	public 	Hashtable bestPriceCatalogue;// catalogue with the best prices (winning prices) for each capability
+	
+	public Hashtable operationSequence; // tA name: skill, time
 
 //	// The list of known task agents
 //	private AID[] taskAgents;
 	private String serviceType;
 	private String[] skills; // products that this service type OH agent has skills to work with
 	private int[] mfgTime;
-
+	
+	public static int priceA;
+	public String requiredSkill;
+	
 	// Put agent initializations here
 	protected void setup() {
-
+		
 		// initialize hashtables
 		catalogue = new Hashtable(); 
 		priceCatalogue = new Hashtable(); 
@@ -45,14 +50,15 @@ public class OperationalAgent extends Agent {
 
 		if (args != null && args.length > 0) {
 			serviceType = (String) args[0]; // OH type
-			skills = (String[]) args[1]; // type of products it can stack
-			mfgTime = (int[]) args[2]; // how long it takes to finish stacking
+			skills = (String[]) args[1]; // type of products it can work with
+			mfgTime = (int[]) args[2]; // how long it takes to finish the task
 		}
 		
 		// 2. Update agents catalogue with products it can work with and time it takes to finish the task
 		for (int i = 0; i < skills.length; i++) {
 			catalogue.put((String) skills[i],new Integer (mfgTime[i]));
 		}
+		// 3. Update prices 
 		
 		// 3. Printout a welcome message
 		System.out.println("Operational  agent: \"" + getAID().getName() + "\" is ready."
@@ -64,14 +70,13 @@ public class OperationalAgent extends Agent {
 
 		// 5. Add the OH agent behaviour
 //		addBehaviour(new OperationalAgentBehaviour(this));
+		
 		// Handle the work offers issued by TH Agent
-		addBehaviour(new WorkAnnouncementHandler(catalogue, skills));
+		addBehaviour(new WorkAnnouncementHandler(this, skills));
 		// What to do once an accept proposal from TH agent has been received
-		addBehaviour(new WorkAcceptenceHandler(catalogue));
+		addBehaviour(new WorkAcceptenceHandler(this));
 		// receive inform messages aboout the offer that won from other OH agents
-//		addBehaviour(new InfoAboutWinningOH(bestPriceCatalogue));
-		
-		
+		addBehaviour(new InfoAboutWinningOH(this));
 	}
 
 	// Put agent clean-up operations here
@@ -84,6 +89,9 @@ public class OperationalAgent extends Agent {
 		}
 		// Printout a dismissal message
 		System.out.println("Operational agent: \"" + getAID().getName() + "\" terminating.");
+		
+		System.out.println("Price catalogue: "+ priceCatalogue);
+		System.out.println("Best price catalogue: "+ bestPriceCatalogue);
 	}
 
 	// Registers agents services to the DF

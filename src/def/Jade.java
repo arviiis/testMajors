@@ -125,11 +125,13 @@ public class Jade {
 	static void addOhAgents() {
 
 		// products the OH agent has skills to work with
-		String[] skills = { "none" }; 
+		String[] skills = { "none" };
 		String[] skills1 = { "pA" };
 		String[] skills2 = { "pB" };
 		String[] skills3 = { "pC" };
 		String[] skills4 = { "pA", "pB" };
+		String[] skills5 = { "pA" };
+		String[] skills6 = { "pA", "pB", "pC", "pA" };
 
 		// how long it takes to complete each skill
 		int[] mfgTime = { 0 };
@@ -138,13 +140,15 @@ public class Jade {
 		int[] mfgTime3 = { 30 };
 		int[] mfgTime4 = { 35, 30 };
 		int[] mfgTime5 = { 10 };
+//		int[] mfgTime6 = { 10, 11, 12, 13 };
 
 		addOhAgent(1, "stacker", skills1, mfgTime1);
 		addOhAgent(2, "stacker", skills2, mfgTime2);
 //		addOhAgent(3, "stacker", products3, mfgTime3);
 		addOhAgent(4, "stacker", skills4, mfgTime4);
+//		addOhAgent(7, "stacker", skills6, mfgTime6);
 
-		addOhAgent(5, "wrapper", skills1, mfgTime5);
+		addOhAgent(5, "wrapper", skills4, mfgTime4);
 		addOhAgent(6, "mover", skills, mfgTime);
 	}
 }

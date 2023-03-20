@@ -14,10 +14,11 @@ public class ProductAgent extends Agent {
 	// - sequence in which the services need to be executed (determined by place in list)
 	
 	// info about the product A (service, type of skill, sequence)
-	private String[] productAInfo = {"stacker", "pA"};
+//	private String[] productAInfo = {"stacker", "pA"};
+	private String[] productAInfo = {"stacker", "pA", "stacker", "pB", "wrapper", "pA"};
 	private String[] productBInfo = {"stacker", "pB", "wrapper", "pB"};
 	private String[] productCInfo = {"stacker", "pc", "wrapper", "pC"};
-	private String[] productDInfo = {"stacker", "pA", "stacker", "pB", "wrapper", "pD"};
+//	private String[] productDInfo = {"stacker", "pA", "stacker", "pB", "wrapper", "pD"};
 	
 
 	public void setup() {
@@ -38,7 +39,7 @@ public class ProductAgent extends Agent {
 		else if (pType == "B") {
 			Jade.addThAgent(1, pType, phId, productBInfo);
 		}
-		else {
+		else if (pType == "C") {
 			Jade.addThAgent(1, pType, phId, productCInfo);
 		}
 

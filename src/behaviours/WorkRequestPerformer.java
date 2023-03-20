@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,6 +28,7 @@ public class WorkRequestPerformer extends Behaviour {
 	private MessageTemplate mt; // The template to receive replies
 	private int step = 0;
 
+	private TaskAgent tA;
 	private AID[] availableAgents;
 	private AID[] otherSellers;
 	private List<AID> answeredSellers = new ArrayList<AID>();
@@ -38,7 +40,8 @@ public class WorkRequestPerformer extends Behaviour {
 	private String type = "stacker";
 	private Agent a;
 
-	public WorkRequestPerformer(AID[] availableAgents, String requiredSkill) {
+	public WorkRequestPerformer(TaskAgent tA, AID[] availableAgents, String requiredSkill) {
+		this.tA = tA;
 		this.availableAgents = availableAgents; // what type of OH Agent it has to look for
 		this.requiredSkill = requiredSkill; // the skill the agent has to come up with a price
 	}
@@ -104,7 +107,7 @@ public class WorkRequestPerformer extends Behaviour {
 			// Send the purchase order to the seller that provided the best offer
 			ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 			order.addReceiver(bestSeller);
-			order.setContent(Integer.toString(bestPrice));
+			order.setContent(requiredSkill);
 			order.setConversationId(cId);
 			order.setReplyWith("order" + System.currentTimeMillis());
 			myAgent.send(order);
@@ -123,9 +126,8 @@ public class WorkRequestPerformer extends Behaviour {
 				// Purchase order reply received
 				if (reply.getPerformative() == ACLMessage.INFORM) {
 					// Purchase successful. We can terminate
-					System.out.println(requiredSkill + " successfully purchased from agent " + reply.getSender().getLocalName());
-					System.out.println("Price = " + bestPrice);
-//						myAgent.doDelete();
+					System.out.println(requiredSkill + " successfully purchased from agent " + reply.getSender().getLocalName()+" for price: "+ bestPrice);
+					tA.operationList.add(reply.getSender().getLocalName());
 				} else {
 					System.out.println("Attempt failed: requested wo already sold.");
 				}
@@ -143,14 +145,16 @@ public class WorkRequestPerformer extends Behaviour {
 			// set the skill the TH agent is looking for
 			inform.setContent(Integer.toString(bestPrice));
 			inform.setConversationId(cId);
-			inform.setReplyWith("cfp" + System.currentTimeMillis()); // Unique value
+			inform.setReplyWith("inform" + System.currentTimeMillis()); // Unique value
 			myAgent.send(inform);
 			step = 5;
 		}	
 	}
 
 	public boolean done() {
+		
 		if (step == 2 && bestSeller == null) {
+
 			System.out.println("Attempt failed: " + requiredSkill + " not available for sale");
 		}
 		return ((step == 2 && bestSeller == null) || step == 5);
