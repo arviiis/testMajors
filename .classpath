@@ -8,5 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Arvis/Documents/Jade/JADE-bin-4.5.0/jade/lib/EasyModbusJava.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Arvis/Documents/Jade/JADE-bin-4.5.0/jade/lib/jade.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvis/Documents/Jade/JADE-bin-4.5.0/jade/lib/jfreechart-1.5.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

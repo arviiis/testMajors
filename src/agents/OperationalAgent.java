@@ -27,7 +27,8 @@ public class OperationalAgent extends Agent {
 	public Hashtable priceCatalogue;// catalogue with the prices offered for each capability
 	public Hashtable bestPriceCatalogue;// catalogue with the best prices (winning prices) for each capability
 	
-	public Hashtable operationSequence; // tA name: skill, time
+	public Hashtable operationSequence; // tA name: skill
+//	public List<Object> operationSequence = new ArrayList<>(); // tA name: skill, time
 	public Timer timer; // timer that keeps track of OH schedule
 
 //	// The list of known task agents
@@ -46,9 +47,10 @@ public class OperationalAgent extends Agent {
 		catalogue = new Hashtable(); 
 		priceCatalogue = new Hashtable(); 
 		bestPriceCatalogue = new Hashtable();
+		operationSequence = new Hashtable();
 		
-		// initialise timer as deamon thread
-		timer = new Timer(true);
+//		// initialise timer as deamon thread
+//		timer = new Timer(true);
 
 		// 1. get agent arguments (set when creating the agent)
 		Object[] args = getArguments();

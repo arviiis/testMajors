@@ -9,6 +9,10 @@ import javax.sound.midi.InvalidMidiDataException;
 
 import ProductHolonGUI.WelcomeFrame;
 import agents.ProductAgent;
+import chart.ChartFrame;
+import chart.GanttChartCustom;
+import chart.GanttChartFrame;
+import chart.JFreeChartGanttChartExample;
 import de.re.easymodbus.modbusclient.ModbusClient;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -25,6 +29,8 @@ import ProductHolonGUI.*;
 public class Main {
 
 	private static WelcomeFrame myGui;
+	private static GanttChartFrame myChart;
+	private static JFreeChartGanttChartExample myChart2;
 	
 	
 	public static void main(String[] args) throws Exception {
@@ -48,6 +54,13 @@ public class Main {
 //		// Start a product choice GUI
 		myGui = new WelcomeFrame();
 //		ProductAgent PH_agent = new ProductAgent();
+		
+		// create Gantt chart frame
+		myChart = new GanttChartFrame("Product Holon GUI", "OH agent Gantt chart");
+		
+//		myChart2 = new JFreeChartGanttChartExample("Gantt Chart 2", "OH 2");
+		
+		
 
 
 	}

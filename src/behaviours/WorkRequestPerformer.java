@@ -37,8 +37,6 @@ public class WorkRequestPerformer extends Behaviour {
 	
 //	private String targetBookTitle = "nosaukums";
 	private String requiredSkill;
-	private String type = "stacker";
-	private Agent a;
 
 	public WorkRequestPerformer(TaskAgent tA, AID[] availableAgents, String requiredSkill) {
 		this.tA = tA;
@@ -89,7 +87,7 @@ public class WorkRequestPerformer extends Behaviour {
 				repliesCnt++;
 				if (repliesCnt >= availableAgents.length) {
 					// Received all replies
-					otherSellers = removeTheElement(availableAgents, bestSeller);
+					otherSellers = removeTheElement(availableAgents, bestSeller); // remove an element from array
 //					System.out.println("Best price is: " + bestPrice);
 //					System.out.println("Best seller is: " + bestSeller.getLocalName());
 //					System.out.print("Other sellers: ");

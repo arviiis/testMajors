@@ -133,7 +133,7 @@ public class Jade {
 		String[] skills5 = { "pA" };
 		String[] skills6 = { "pA", "pB", "pC", "pA" };
 
-		// how long it takes to complete each skill
+		// how long it takes to complete each skill in seconds
 		int[] mfgTime = { 0 };
 		int[] mfgTime1 = { 25 };
 		int[] mfgTime2 = { 45 };
@@ -143,12 +143,12 @@ public class Jade {
 //		int[] mfgTime6 = { 10, 11, 12, 13 };
 
 		addOhAgent(1, "stacker", skills1, mfgTime1);
-//		addOhAgent(2, "stacker", skills2, mfgTime2);
+		addOhAgent(2, "stacker", skills2, mfgTime2);
 //		addOhAgent(3, "stacker", products3, mfgTime3);
-//		addOhAgent(4, "stacker", skills4, mfgTime4);
+		addOhAgent(4, "stacker", skills4, mfgTime4);
 //		addOhAgent(7, "stacker", skills6, mfgTime6);
 
-//		addOhAgent(5, "wrapper", skills4, mfgTime4);
+		addOhAgent(5, "wrapper", skills4, mfgTime4);
 //		addOhAgent(6, "mover", skills, mfgTime);
 	}
 }

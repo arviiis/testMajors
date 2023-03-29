@@ -11,6 +11,7 @@ import jade.wrapper.StaleProxyException;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -34,6 +35,8 @@ public class WelcomeFrame extends JFrame {
 	private JTextField txtProdB;
 	private JLabel lblProdC;
 	private JTextField txtProdC;
+	
+	public static Date startDate;
 
 	// Create the frame.
 	public WelcomeFrame() {
@@ -132,15 +135,19 @@ public class WelcomeFrame extends JFrame {
 					int qtyB = Integer.parseInt(qtyProdB);
 					int qtyC = Integer.parseInt(qtyProdC);
 
-				// What to do with Prod A value
+					// What to do with Prod A value
 					String displayString = "Prod A qty: " + qtyA + "\nProd B qty: " + qtyB + "\nProd C qty: " + qtyC;
 					// shows what qty has been chosen
 					JOptionPane.showMessageDialog(null, displayString);
+					
+					// create a time reference for OH agents
+					startDate = new Date();
 
-//					// Create PH agents
+					// Create PH agents
 					Jade.addPhAgent(qtyA, "A");
 					Jade.addPhAgent(qtyB, "B");
-					Jade.addPhAgent(qtyC, "C");
+					Jade.addPhAgent(qtyC, "C");		
+					
 				}
 			}
 		});

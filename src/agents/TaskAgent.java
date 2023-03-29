@@ -2,8 +2,10 @@ package agents;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import ProductHolonGUI.WelcomeFrame;
 import behaviours.WorkRequestPerformer;
 import jade.content.lang.sl.ExtendedSLParserConstants;
 import jade.core.AID;
@@ -30,8 +32,6 @@ public class TaskAgent extends Agent {
 
 	protected void setup() {
 		
-		
-
 		// 1. Get agent arguments passed from the PH agent
 		Object[] args = getArguments();
 		String type = args[0].toString(); // this returns the type of product this PH agent represents
@@ -56,14 +56,17 @@ public class TaskAgent extends Agent {
 		// Iterate over services and skills necessary and find appropriate sellers
 		SequentialBehaviour THbehaviour = new SequentialBehaviour(this);
 		
+
 		// add sequential behaviours so that the list of operations is made in the correct order
 		for (int i = 0; i < productInfo.length; i=i+2) {
 
 			// Set the type of service to look for(stacker, mover, wrapper)
 			serviceType = productInfo[i]; // 0th, 2nd, 4th, etc.
 			requiredSkill = productInfo[i+1]; // 1st, 3rd, 5th etc.
-			
+	
 			System.out.println("\n" + getAID().getLocalName() + " looking for service: " + serviceType);
+//			System.out.println(getAID().getLocalName() + " negotiation start time: " + WelcomeFrame.startDate);
+			
 			// get all the agents that offer the service
 			availableAgents = searchDF(serviceType);
 			System.out.print(serviceType + " agents available for " + getAID().getLocalName() + ": ");

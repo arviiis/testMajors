@@ -35,10 +35,12 @@ public class WorkAcceptenceHandler extends CyclicBehaviour {
 				reply.setPerformative(ACLMessage.INFORM); // send an inform message to TH, to inform that the deal is done
 				System.out.println("Work sold to agent " + msg.getSender().getLocalName());
 				
+				opA.operationSequence.put(msg.getSender().getLocalName(), requiredSkill); // place the task in OH task list (th_name: requiredSkill)type name = new type();
+				
 //		        TimerTask timerTask1 = new MyTimerTask((Integer) opA.catalogue.get(requiredSkill));
 //		        opA.timer.schedule(timerTask1, 20*1000);
 //		        System.out.println("TimerTask1 scheduled placed in the schedule at "+ new Date());
-				
+				System.out.println(myAgent.getLocalName() + " operation sequence: " + opA.operationSequence);
 				
 			} else {
 				// The requested book has been sold to another buyer in the meanwhile .
