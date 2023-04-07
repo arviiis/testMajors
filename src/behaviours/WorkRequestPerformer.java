@@ -34,8 +34,6 @@ public class WorkRequestPerformer extends Behaviour {
 	private List<AID> answeredSellers = new ArrayList<AID>();
 	private AID bestSeller; // The agent who provides the best offer
 
-	
-//	private String targetBookTitle = "nosaukums";
 	private String requiredSkill;
 
 	public WorkRequestPerformer(TaskAgent tA, AID[] availableAgents, String requiredSkill) {
@@ -53,6 +51,7 @@ public class WorkRequestPerformer extends Behaviour {
 		switch (step) {
 		// Send out CFP for all the agents that offer the necessary service
 		case 0:
+			System.out.println("\nTH agent "+ myAgent.getLocalName() + " sends out CFP to available agents");
 			// create message for all the available OH agents that provide the service
 			ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
 			for (int i = 0; i < availableAgents.length; ++i) {
@@ -123,9 +122,13 @@ public class WorkRequestPerformer extends Behaviour {
 			if (reply != null) {
 				// Purchase order reply received
 				if (reply.getPerformative() == ACLMessage.INFORM) {
-					// Purchase successful. We can terminate
+					// Purchase successful
 					System.out.println(requiredSkill + " successfully purchased from agent " + reply.getSender().getLocalName()+" for price: "+ bestPrice);
-					tA.operationList.add(reply.getSender().getLocalName()); // 
+					
+					tA.operationList.add(reply.getSender().getLocalName()); // TH agent task executor list
+					
+					tA.taTime += bestPrice; // seconds it takes from startDate to complete all the TA accepted tasks
+					System.out.println(myAgent.getLocalName() + " TH agent occupied time: " + tA.taTime);
 				} else {
 					System.out.println("Attempt failed: requested wo already sold.");
 				}
@@ -141,7 +144,7 @@ public class WorkRequestPerformer extends Behaviour {
 				inform.addReceiver(answeredSellers.get(i));
 			}
 			// set the skill the TH agent is looking for
-			inform.setContent(Integer.toString(bestPrice));
+			inform.setContent(Integer.toString(bestPrice)); // price + time TH is already busy
 			inform.setConversationId(cId);
 			inform.setReplyWith("inform" + System.currentTimeMillis()); // Unique value
 			myAgent.send(inform);
@@ -152,10 +155,17 @@ public class WorkRequestPerformer extends Behaviour {
 	public boolean done() {
 		
 		if (step == 2 && bestSeller == null) {
-
 			System.out.println("Attempt failed: " + requiredSkill + " not available for sale");
 		}
-		return ((step == 2 && bestSeller == null) || step == 5);
+		
+//		return ((step == 2 && bestSeller == null) || step == 5);
+		if ((step == 2 && bestSeller == null) || step == 5) {
+			System.out.println(myAgent.getLocalName() +" getting "+requiredSkill +" Done!\n");
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	// Function to remove the element

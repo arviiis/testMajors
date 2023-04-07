@@ -28,9 +28,9 @@ import ProductHolonGUI.*;
 
 public class Main {
 
-	private static WelcomeFrame myGui;
-	private static GanttChartFrame myChart;
-	private static JFreeChartGanttChartExample myChart2;
+	public static WelcomeFrame myGui;
+	public static GanttChartFrame myChart;
+	public static Jade run_Jade;
 	
 	
 	public static void main(String[] args) throws Exception {
@@ -49,19 +49,14 @@ public class Main {
 		
 		
  		// Create Jade runtime instance
-		Jade run_Jade = new Jade();
+		run_Jade = new Jade();
 		
 //		// Start a product choice GUI
 		myGui = new WelcomeFrame();
 //		ProductAgent PH_agent = new ProductAgent();
 		
 		// create Gantt chart frame
-		myChart = new GanttChartFrame("Product Holon GUI", "OH agent Gantt chart");
-		
-//		myChart2 = new JFreeChartGanttChartExample("Gantt Chart 2", "OH 2");
-		
-		
-
+		myChart = new GanttChartFrame("Operational holon GUI", "OH agent Gantt chart");
 
 	}
 	

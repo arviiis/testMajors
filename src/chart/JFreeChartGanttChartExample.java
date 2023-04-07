@@ -40,6 +40,8 @@ public class JFreeChartGanttChartExample extends JFrame {
     private IntervalCategoryDataset createDataset() {
 
 	TaskSeriesCollection dataset = new TaskSeriesCollection();
+	
+	
 	TaskSeries expected = new TaskSeries("Expected Date");
 	expected.add(new Task("Analysis", Date.from(LocalDate.of(2018, 9, 5).atStartOfDay().toInstant(ZoneOffset.UTC)),
 		Date.from(LocalDate.of(2018, 9, 8).atStartOfDay().toInstant(ZoneOffset.UTC))));
@@ -69,6 +71,9 @@ public class JFreeChartGanttChartExample extends JFrame {
 
 	actual.add(new Task("Testing", Date.from(LocalDate.of(2018, 9, 28).atStartOfDay().toInstant(ZoneOffset.UTC)),
 		Date.from(LocalDate.of(2018, 10, 3).atStartOfDay().toInstant(ZoneOffset.UTC))));
+	
+	
+	
         dataset.add(actual);
 
 

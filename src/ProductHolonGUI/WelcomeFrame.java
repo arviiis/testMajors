@@ -6,12 +6,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import chart.GanttChartFrame;
 import def.Jade;
+import def.Main;
+import jade.core.AID;
 import jade.wrapper.StaleProxyException;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -37,16 +42,24 @@ public class WelcomeFrame extends JFrame {
 	private JTextField txtProdC;
 	
 	public static Date startDate;
+	private JButton btnShowChart;
+	
+	public int qtyA;
+	public int qtyB;
+	public int qtyC;
 
+//	public static GanttChartFrame myChart;
+	
 	// Create the frame.
 	public WelcomeFrame() {
-
+		
 		// Initialise and create components
 		initComponents();
 		// Handle events
 		createEvents();
 		// show the GUI
 		showGui();
+		
 	}
 
 	// create and initialize components
@@ -55,7 +68,7 @@ public class WelcomeFrame extends JFrame {
 		setTitle("Product Holon GUI");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WelcomeFrame.class.getResource("/ProductHolonGUI/home.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 245, 439);
+		setBounds(100, 100, 418, 521);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -81,40 +94,54 @@ public class WelcomeFrame extends JFrame {
 
 		txtProdC = new JTextField();
 		txtProdC.setColumns(10);
+		
+		btnShowChart = new JButton("Show chart");
+
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(lblProdC, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(lblProdB, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(lblProdA, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtProdC, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtProdB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtProdA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE))
-				.addGap(442))
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup().addGap(52)
-						.addComponent(btnOrderButton).addContainerGap(495, Short.MAX_VALUE)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup().addGap(37)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(lblProdA).addComponent(
-						txtProdA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				.addGap(18)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(lblProdC, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(lblProdB, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(lblProdA))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtProdC, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtProdB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtProdA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(42)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnShowChart)
+								.addComponent(btnOrderButton))))
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblProdA)
+						.addComponent(txtProdA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblProdB, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtProdB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE))
-				.addGap(18)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(txtProdB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblProdC, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtProdC, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE))
-				.addGap(18).addComponent(btnOrderButton).addContainerGap(298, Short.MAX_VALUE)));
+						.addComponent(txtProdC, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addComponent(btnOrderButton)
+					.addPreferredGap(ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+					.addComponent(btnShowChart)
+					.addGap(49))
+		);
 		contentPane.setLayout(gl_contentPane);
 
 	}
@@ -131,9 +158,9 @@ public class WelcomeFrame extends JFrame {
 				if (!isInteger(qtyProdA) || !isInteger(qtyProdB) || !isInteger(qtyProdC)) {
 					JOptionPane.showMessageDialog(null, "Please insert integer value!");
 				} else {
-					int qtyA = Integer.parseInt(qtyProdA);
-					int qtyB = Integer.parseInt(qtyProdB);
-					int qtyC = Integer.parseInt(qtyProdC);
+					qtyA = Integer.parseInt(qtyProdA);
+					qtyB = Integer.parseInt(qtyProdB);
+					qtyC = Integer.parseInt(qtyProdC);
 
 					// What to do with Prod A value
 					String displayString = "Prod A qty: " + qtyA + "\nProd B qty: " + qtyB + "\nProd C qty: " + qtyC;
@@ -146,9 +173,15 @@ public class WelcomeFrame extends JFrame {
 					// Create PH agents
 					Jade.addPhAgent(qtyA, "A");
 					Jade.addPhAgent(qtyB, "B");
-					Jade.addPhAgent(qtyC, "C");		
+					Jade.addPhAgent(qtyC, "C");
 					
 				}
+			}
+		});
+		
+		btnShowChart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Main.myChart.showFrame();
 			}
 		});
 	}
@@ -163,7 +196,6 @@ public class WelcomeFrame extends JFrame {
 			return false;
 		}
 	}
-
 
 	// Displays the created GUI
 	public void showGui() {

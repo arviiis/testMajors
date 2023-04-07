@@ -24,11 +24,15 @@ import behaviours.WorkAnnouncementHandler;
 public class OperationalAgent extends Agent {
 
 	public Hashtable catalogue; // catalogue of agents capabilities (product: mfgTime). How long it takes to complete each task
-	public Hashtable priceCatalogue;// catalogue with the prices offered for each capability
-	public Hashtable bestPriceCatalogue;// catalogue with the best prices (winning prices) for each capability
+	public Hashtable priceCatalogue; // catalogue with the prices offered for each capability
+	public Hashtable bestPriceCatalogue; // catalogue with the best prices (winning prices) for each capability
+	public Hashtable priceIncludingTaTime; // price of the item sold including the TA time delay
 	
 	public Hashtable operationSequence; // tA name: skill
-//	public List<Object> operationSequence = new ArrayList<>(); // tA name: skill, time
+	
+	
+	public Map<String, List<Object>> hm = new HashMap<String, List<Object>>(); // tA name: skill, estimated end time
+	
 	public Timer timer; // timer that keeps track of OH schedule
 
 //	// The list of known task agents
@@ -47,10 +51,8 @@ public class OperationalAgent extends Agent {
 		catalogue = new Hashtable(); 
 		priceCatalogue = new Hashtable(); 
 		bestPriceCatalogue = new Hashtable();
+		priceIncludingTaTime = new Hashtable();
 		operationSequence = new Hashtable();
-		
-//		// initialise timer as deamon thread
-//		timer = new Timer(true);
 
 		// 1. get agent arguments (set when creating the agent)
 		Object[] args = getArguments();
@@ -100,6 +102,17 @@ public class OperationalAgent extends Agent {
 		
 		System.out.println("Price catalogue: "+ priceCatalogue);
 		System.out.println("Best price catalogue: "+ bestPriceCatalogue);
+		
+		// Display the hashmap
+//		Iterator<Map.Entry<String, List<Object>>> iterator = hm.entrySet().iterator();
+//
+//	    while (iterator.hasNext()) {
+//	        Map.Entry<String, List<Object>> entry = iterator.next();
+//	        String key = entry.getKey();
+//	        List<Object> value = entry.getValue(); // list of {skill, estimat}
+//	        System.out.println("Key=" + key + ", Value=" + value);
+//	    }
+
 	}
 
 	// Registers agents services to the DF

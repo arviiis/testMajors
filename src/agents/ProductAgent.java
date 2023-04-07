@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import def.Jade;
+import def.Main;
 import jade.core.AID;
 import jade.core.Agent;
 
@@ -34,7 +35,12 @@ public class ProductAgent extends Agent {
 		
 		// Give TH agent info about the product it represents
 		if (pType == "A") {
-			Jade.addThAgent(1, pType, phId, productAInfo);
+			try {
+				Jade.addThAgent(1, pType, phId, productAInfo);
+			} catch (Exception e) {
+				System.out.println("Cannot create task agent type A: -----------------------------------------------------------------------------------------------------------");
+			}
+
 		}
 		else if (pType == "B") {
 			Jade.addThAgent(1, pType, phId, productBInfo);

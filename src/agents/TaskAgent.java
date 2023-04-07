@@ -7,6 +7,7 @@ import java.util.List;
 
 import ProductHolonGUI.WelcomeFrame;
 import behaviours.WorkRequestPerformer;
+import def.Main;
 import jade.content.lang.sl.ExtendedSLParserConstants;
 import jade.core.AID;
 import jade.core.Agent;
@@ -15,6 +16,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.tools.DummyAgent.DummyAgent;
 import jade.core.behaviours.*;
 
 public class TaskAgent extends Agent {
@@ -24,10 +26,12 @@ public class TaskAgent extends Agent {
 	private AID supervisorAgent;
 
 	
-	public List<Object> operationList = new ArrayList<>();
+	public List<Object> operationList = new ArrayList<>(); // list of task executors
 	
 	private String serviceType;
 	private String requiredSkill;
+	
+	public int taTime = 0; // total time it takes to execute all the accepted tasks
 //	private int requestInterval = 5000;
 
 	protected void setup() {
@@ -44,8 +48,9 @@ public class TaskAgent extends Agent {
 //			System.out.println(i + "th list member is: "+ productInfo[i]);
 //		}
 		
-		// 3. Register the OH agent services in the yellow pages
-		register("task agent");
+		// 3. Register the OH agent services in the yellow pages and create a task series for the TH agent
+		register("task agent"); 
+		Main.myChart.addTaskSeries(getAID().getLocalName()); // create Task Series with the TH name as description
 		
 		// 4. Get supervisor agent
 		// returns one agent with the specified service
@@ -129,7 +134,7 @@ public class TaskAgent extends Agent {
 	}
 
 	// returns all the agents that provide the service
-	AID[] searchDF(String service) {
+	public AID[] searchDF(String service) {
 		DFAgentDescription dfd = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType(service);

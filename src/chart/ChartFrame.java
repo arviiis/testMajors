@@ -124,6 +124,7 @@ public class ChartFrame extends JFrame {
 	public IntervalCategoryDataset createDataset() {
 		
 		TaskSeriesCollection dataset = new TaskSeriesCollection();
+		
         TaskSeries s1 = new TaskSeries("Scheduled");
 
         s1.add(new Task("first OH", date(9, Calendar.APRIL, 2001), date(10, Calendar.APRIL, 2001)));

@@ -2,8 +2,11 @@ package behaviours;
 
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,6 +24,7 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 
 	private String[] skills; // skills that the OH agent is capable of fulfilling
 	private int price;
+	private int price2;
 
 	OperationalAgent opA;
 
@@ -40,21 +44,16 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 			ACLMessage reply = msg.createReply();
 			boolean i = true;
 
-//			Date ds = WelcomeFrame.startDate;
-//			System.out.println("Time from GUI: "+ ds);
-
 			if (hasSkill(skills, requiredSkill)) {
 				// check if there is a time slot in the schedule
 				if (i) {
-
 					// calculate price
 					price = getPrice(WelcomeFrame.startDate, opA.operationSequence, opA.catalogue, requiredSkill); // calculate
 																													// price
-
 					// send a proposal
 					reply.setPerformative(ACLMessage.PROPOSE);
 					reply.setContent(Integer.toString(price));
-					System.out.println("Propose message sent to TH agent from: " + myAgent.getLocalName());
+//					System.out.println("Propose message sent to TH agent from: " + myAgent.getLocalName());
 
 					// get the previously saved price for the product
 					Integer previousPrice = (Integer) opA.priceCatalogue.get(requiredSkill);
@@ -62,11 +61,11 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 					if (previousPrice != null) {
 						opA.priceCatalogue.replace(requiredSkill, price);// update the price of the skill in the
 																			// catalogue
-						System.out.println(requiredSkill + " changed price in " + myAgent.getLocalName()
-								+ " price catalogue: " + opA.priceCatalogue);
+//						System.out.println(requiredSkill + " changed price in " + myAgent.getLocalName()
+//								+ " price catalogue: " + opA.priceCatalogue);
 					} else {
 						opA.priceCatalogue.put(requiredSkill, price);
-						System.out.println(myAgent.getLocalName() + " price catalogue: " + opA.priceCatalogue);
+//						System.out.println(myAgent.getLocalName() + " price catalogue: " + opA.priceCatalogue);
 					}
 
 				}
@@ -109,7 +108,8 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 		String skill; // skill that needs to be completed for this TA
 
 		int skillMfgTime; // how long it takes to complete the skill
-		int totalTime = 0; // how long it takes to complete all the tasks
+		int totalTime = 0; // how long it takes to complete all the tasks for OH
+		int taOccupiedTime; // time that the TH agent is already occupied. To avoid 2 tasks executed at the same time
 
 		int EstimateEndTime;
 
@@ -144,5 +144,4 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 //		return price;
 
 	}
-
 }
