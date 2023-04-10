@@ -73,7 +73,7 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 				// The OH cannot complete the wo
 				reply.setPerformative(ACLMessage.REFUSE);
 				reply.setContent("not-available");
-				System.out.println("Refuse message sent to TH agent from: " + myAgent.getLocalName());
+//				System.out.println("Refuse message sent to TH agent from: " + myAgent.getLocalName());
 			}
 			myAgent.send(reply);
 		} else {
@@ -133,10 +133,10 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 //			System.out.println("Total mfg time is: " + totalTime);
 		}
 
-		System.out.println(myAgent.getLocalName() + " total mfg time: " + totalTime + " seconds!");
+//		System.out.println(myAgent.getLocalName() + " total mfg time: " + totalTime + " seconds!");
 
 		EstimateEndTime = startDate.getHours() * 3600 + startDate.getMinutes() * 60 + startDate.getSeconds() + totalTime + requiredSkillMfgTime;
-		System.out.println(myAgent.getLocalName() + " estimated end time: " + EstimateEndTime + " seconds!");
+//		System.out.println(myAgent.getLocalName() + " estimated end time: " + EstimateEndTime + " seconds!");
 		return EstimateEndTime;
 
 //		// generate random price for the work

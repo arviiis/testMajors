@@ -39,25 +39,21 @@ public class Jade {
 	}
 
 	// Create Product holon agent
-	public static void addPhAgent(int qty, String type) {
+	public static void addPhAgent(int id, String type) {
 
 		String agentName = "PH Agent_" + type;
 
 		Object[] args = new Object[3];
 		args[0] = type; // one of 3 options: A, B, C.
-
-		for (int i = 0; i < qty; i++) {
-			try {
-				// Start a product agent for each product that was ordered from GUI
-				ac = cc.createNewAgent(agentName + (i + 1), "agents.ProductAgent", args);
-				args[1] = (i + 1); //
-				// Start the agents
-				ac.start();
-			} catch (StaleProxyException spe) {
-				// TODO: handle exception
-				spe.printStackTrace();
-				System.out.println(spe.getMessage());
-			}
+		
+		
+		try {
+			args[1] = (id); 
+			ac = cc.createNewAgent(agentName + id, "agents.ProductAgent", args);
+			ac.start();
+		} catch (Exception spe) {
+			spe.printStackTrace();
+			System.out.println(spe.getMessage());
 		}
 	}
 
@@ -144,11 +140,14 @@ public class Jade {
 
 		addOhAgent(1, "stacker", skills1, mfgTime1);
 		addOhAgent(2, "stacker", skills2, mfgTime2);
-//		addOhAgent(3, "stacker", products3, mfgTime3);
+		addOhAgent(3, "stacker", skills3, mfgTime3);
 		addOhAgent(4, "stacker", skills4, mfgTime4);
 //		addOhAgent(7, "stacker", skills6, mfgTime6);
 
 		addOhAgent(5, "wrapper", skills4, mfgTime4);
+		addOhAgent(6, "wrapper", skills3, mfgTime5);
 //		addOhAgent(6, "mover", skills, mfgTime);
+		
+//		System.out.println("");
 	}
 }

@@ -18,7 +18,7 @@ public class ProductAgent extends Agent {
 //	private String[] productAInfo = {"stacker", "pA"};
 	private String[] productAInfo = {"stacker", "pA", "stacker", "pB", "wrapper", "pA"};
 	private String[] productBInfo = {"stacker", "pB", "wrapper", "pB"};
-	private String[] productCInfo = {"stacker", "pc", "wrapper", "pC"};
+	private String[] productCInfo = {"stacker", "pC", "wrapper", "pC"};
 //	private String[] productDInfo = {"stacker", "pA", "stacker", "pB", "wrapper", "pD"};
 	
 
@@ -31,16 +31,11 @@ public class ProductAgent extends Agent {
 //		String arg3 = args[2].toString(); 
 		
 		// Printout a welcome message
-		System.out.println("Product \"" + pType + "\" agent: \"" + getAID().getName() + "\" is ready.");
+		System.out.println("\nProduct \"" + pType + "\" agent: \"" + getAID().getName() + "\" is ready.");
 		
 		// Give TH agent info about the product it represents
 		if (pType == "A") {
-			try {
-				Jade.addThAgent(1, pType, phId, productAInfo);
-			} catch (Exception e) {
-				System.out.println("Cannot create task agent type A: -----------------------------------------------------------------------------------------------------------");
-			}
-
+			Jade.addThAgent(1, pType, phId, productAInfo);
 		}
 		else if (pType == "B") {
 			Jade.addThAgent(1, pType, phId, productBInfo);

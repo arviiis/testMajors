@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import ProductHolonGUI.WelcomeFrame;
 import behaviours.WorkRequestPerformer;
@@ -42,7 +43,7 @@ public class TaskAgent extends Agent {
 		String[] productInfo = (String[]) args[1];// info about the product
 		
 		// 2. Printout a welcome message
-		System.out.println("Task agent for product \"" + type + "\": \"" + getAID().getName() + "\" is ready.");
+		System.out.println("\nTask agent for product \"" + type + "\": \"" + getAID().getName() + "\" is ready.");
 
 //		for (int i = 0; i < productInfo.length; i++) {
 //			System.out.println(i + "th list member is: "+ productInfo[i]);
@@ -60,7 +61,7 @@ public class TaskAgent extends Agent {
 		// 5. Add TH agent behaviour
 		// Iterate over services and skills necessary and find appropriate sellers
 		SequentialBehaviour THbehaviour = new SequentialBehaviour(this);
-		
+		System.out.println("");
 
 		// add sequential behaviours so that the list of operations is made in the correct order
 		for (int i = 0; i < productInfo.length; i=i+2) {
@@ -69,7 +70,7 @@ public class TaskAgent extends Agent {
 			serviceType = productInfo[i]; // 0th, 2nd, 4th, etc.
 			requiredSkill = productInfo[i+1]; // 1st, 3rd, 5th etc.
 	
-			System.out.println("\n" + getAID().getLocalName() + " looking for service: " + serviceType);
+//			System.out.println("\n" + getAID().getLocalName() + " looking for service: " + serviceType);
 //			System.out.println(getAID().getLocalName() + " negotiation start time: " + WelcomeFrame.startDate);
 			
 			// get all the agents that offer the service
@@ -78,11 +79,13 @@ public class TaskAgent extends Agent {
 			for (int j = 0; j < availableAgents.length; j++)
 				System.out.print(availableAgents[j].getLocalName() + ",  ");
 			System.out.println();
+			
 			// request price offers from OH Agents
 			THbehaviour.addSubBehaviour(new WorkRequestPerformer(this, availableAgents, requiredSkill));
+			
 //			addBehaviour(new WorkRequestPerformer(this, availableAgents, requiredSkill));
 		}
-		
+
 		addBehaviour(THbehaviour);
 
 		// run the behaviour periodically

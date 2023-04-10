@@ -42,16 +42,21 @@ public class WorkRequestPerformer extends Behaviour {
 		this.requiredSkill = requiredSkill; // the skill the agent has to come up with a price
 	}
 
+	
 	public void action() {
 		
 		// identifier to receive appropriate messages
 		Random rand = new Random();
-		String cId = "wo-trade" + rand.nextInt(10000);
+		String cId = Integer.toString(rand.nextInt(10000));
 		
 		switch (step) {
 		// Send out CFP for all the agents that offer the necessary service
 		case 0:
-			System.out.println("\nTH agent "+ myAgent.getLocalName() + " sends out CFP to available agents");
+			
+			System.out.println("\nTH agent " + tA.getLocalName() + " looking for price for skill: " + requiredSkill);
+			
+//			System.out.println("\nTH agent "+ myAgent.getLocalName() + " sends out CFP to available agents");
+			
 			// create message for all the available OH agents that provide the service
 			ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
 			for (int i = 0; i < availableAgents.length; ++i) {
@@ -59,11 +64,11 @@ public class WorkRequestPerformer extends Behaviour {
 			}
 			// set the skill the TH agent is looking for
 			cfp.setContent(requiredSkill);
-			cfp.setConversationId(cId);
+			cfp.setConversationId("trade"+cId);
 			cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique value
 			myAgent.send(cfp);
 			// Prepare the template to get proposals
-			mt = MessageTemplate.and(MessageTemplate.MatchConversationId(cId),
+			mt = MessageTemplate.and(MessageTemplate.MatchConversationId("trade"+cId),
 					MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
 			step = 1;
 			break;
@@ -74,7 +79,7 @@ public class WorkRequestPerformer extends Behaviour {
 				// Reply received
 				if (reply.getPerformative() == ACLMessage.PROPOSE) {
 					// This is an offer
-					System.out.println("Propose message received from: "+ reply.getSender().getLocalName());
+					System.out.println(myAgent.getLocalName() + " received PROPOSE message from: "+ reply.getSender().getLocalName());
 					answeredSellers.add(reply.getSender()); // get a list of all the agents that proposed an offer
 					int price = Integer.parseInt(reply.getContent());
 					if (bestSeller == null || price < bestPrice) {
@@ -99,8 +104,43 @@ public class WorkRequestPerformer extends Behaviour {
 				block();
 			}
 			break;
-		// Accept one offer
+				
+			
+		// inform the OH agent about the TH time it is already occupied
 		case 2:
+			ACLMessage info = new ACLMessage(ACLMessage.PROPOSE);
+			info.addReceiver(bestSeller);
+			info.setContent(Integer.toString(tA.taTime));
+			info.setConversationId("ta_inform" + cId);
+			info.setReplyWith("ta_inform" + System.currentTimeMillis());
+			myAgent.send(info);
+			System.out.println(myAgent.getLocalName() + " sends the TA time to " + bestSeller.getLocalName());
+			// Prepare the template to get the purchase order reply
+			mt = MessageTemplate.and(MessageTemplate.MatchConversationId("ta_inform" + cId),
+					MessageTemplate.MatchInReplyTo(info.getReplyWith()));
+			step = 3;
+			break;
+		case 3:
+			reply = myAgent.receive(mt);
+			if (reply != null) {
+				if(reply.getPerformative() == ACLMessage.AGREE) {
+					int skillMfgTime = Integer.parseInt(reply.getContent());
+					
+					System.out.println(myAgent.getLocalName() + " received the skill mfg time");
+					tA.taTime += skillMfgTime; // get just the time it takes to produce the single skill
+				}
+				else {
+					System.out.println("Best seller agent did not receive TH agent occupied time");
+				}
+				step = 4;
+			} else {	
+				block();
+			}
+			break;
+			
+			
+		// Accept one offer
+		case 4:
 			// Send the purchase order to the seller that provided the best offer
 			ACLMessage order = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 			order.addReceiver(bestSeller);
@@ -108,15 +148,16 @@ public class WorkRequestPerformer extends Behaviour {
 			order.setConversationId(cId);
 			order.setReplyWith("order" + System.currentTimeMillis());
 			myAgent.send(order);
-			System.out.println("Accept proposal message sent to: " + bestSeller.getLocalName());
+			System.out.println(myAgent.getLocalName() + " sends ACCEPT_PROPOSAL message sent to: " + bestSeller.getLocalName());
 			// Prepare the template to get the purchase order reply
 			mt = MessageTemplate.and(MessageTemplate.MatchConversationId(cId),
 					MessageTemplate.MatchInReplyTo(order.getReplyWith()));
-			step = 3;
+			step = 5;
 			break;
 		// Confirm the deal and inform all the involved agents about the offer that was
 		// accepted
-		case 3:
+			
+		case 5:
 			// Receive the purchase order reply
 			reply = myAgent.receive(mt);
 			if (reply != null) {
@@ -127,28 +168,28 @@ public class WorkRequestPerformer extends Behaviour {
 					
 					tA.operationList.add(reply.getSender().getLocalName()); // TH agent task executor list
 					
-					tA.taTime += bestPrice; // seconds it takes from startDate to complete all the TA accepted tasks
+//					tA.taTime += bestPrice; // seconds it takes from startDate to complete all the TA accepted tasks
 					System.out.println(myAgent.getLocalName() + " TH agent occupied time: " + tA.taTime);
 				} else {
 					System.out.println("Attempt failed: requested wo already sold.");
 				}
-				step = 4;
+				step = 6;
 			} else {
 				block();
 			}
 			break;
-		case 4:
+		case 6:
 			// send out inform messages to the OH agents to inform about the offer that won
 			ACLMessage inform = new ACLMessage(ACLMessage.INFORM); // msg that will be sent to all the OH agents
 			for (int i = 0; i < answeredSellers.size(); ++i) {
 				inform.addReceiver(answeredSellers.get(i));
 			}
 			// set the skill the TH agent is looking for
-			inform.setContent(Integer.toString(bestPrice)); // price + time TH is already busy
-			inform.setConversationId(cId);
-			inform.setReplyWith("inform" + System.currentTimeMillis()); // Unique value
+			inform.setContent(Integer.toString(bestPrice));
+			inform.setConversationId("announce_winner");
+			inform.setReplyWith("announce_winner" + System.currentTimeMillis()); // Unique value
 			myAgent.send(inform);
-			step = 5;
+			step = 7;
 		}	
 	}
 
@@ -159,8 +200,8 @@ public class WorkRequestPerformer extends Behaviour {
 		}
 		
 //		return ((step == 2 && bestSeller == null) || step == 5);
-		if ((step == 2 && bestSeller == null) || step == 5) {
-			System.out.println(myAgent.getLocalName() +" getting "+requiredSkill +" Done!\n");
+		if ((step == 2 && bestSeller == null) || step == 7) {
+			System.out.println(myAgent.getLocalName() +" getting "+requiredSkill +" done!\n");
 			return true;
 		}
 		else{

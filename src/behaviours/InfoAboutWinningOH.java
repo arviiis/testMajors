@@ -22,13 +22,16 @@ public class InfoAboutWinningOH extends CyclicBehaviour {
 	public void action() {
 		// Receive the info message from TH containing info about the best price
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+		
 		ACLMessage msg = myAgent.receive(mt);
-		if (msg != null) {
+		
+		if (msg != null && msg.getConversationId() == "announce_winner") {
 			// Purchase order reply received
 			if (msg.getPerformative() == ACLMessage.INFORM) {
 //				String title = msg.getContent();
 				int bestPrice = Integer.parseInt(msg.getContent());
 				requiredSkill = opA.requiredSkill;
+//				opA.taTime = bestPrice; // bestPrice + time it takes to complete all the TH tasks
 				updateBestPriceCatalogue(requiredSkill, bestPrice);
 			} else {
 				System.out.println("Message performative mismatch");
@@ -46,11 +49,11 @@ public class InfoAboutWinningOH extends CyclicBehaviour {
 		
 		if (previousBestPrice != null) {
 			opA.bestPriceCatalogue.replace(skill, bestPrice);
-			System.out.println(requiredSkill + " changed price in " + myAgent.getLocalName()
-					+ " best price catalogue: " + opA.bestPriceCatalogue);
+//			System.out.println(requiredSkill + " changed price in " + myAgent.getLocalName()
+//					+ " best price catalogue: " + opA.bestPriceCatalogue);
 		} else {
 			opA.bestPriceCatalogue.put(skill, bestPrice); // update the best price of the skill in the catalogue
-			System.out.println(myAgent.getLocalName() + " best price catalogue: " + opA.bestPriceCatalogue);
+//			System.out.println(myAgent.getLocalName() + " best price catalogue: " + opA.bestPriceCatalogue);
 		}
 	}
 } 

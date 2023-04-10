@@ -96,6 +96,7 @@ public class GanttChartFrame extends JFrame{
 //		createChart(chartTitle);
 		this.pack(); 
 		this.setVisible(true);
+		System.out.println("Task series: " + dataset.getColumnKeys());
 	}
 	
 	public void addTaskSeries(String name) {

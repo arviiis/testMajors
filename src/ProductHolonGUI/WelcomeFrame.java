@@ -34,12 +34,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class WelcomeFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JButton btnOrderButton;
-	private JTextField txtProdA;
-	private JLabel lblProdB;
-	private JTextField txtProdB;
-	private JLabel lblProdC;
-	private JTextField txtProdC;
 	
 	public static Date startDate;
 	private JButton btnShowChart;
@@ -47,6 +41,12 @@ public class WelcomeFrame extends JFrame {
 	public int qtyA;
 	public int qtyB;
 	public int qtyC;
+	private JButton btnAddpA;
+	private JButton btnAddpB;
+	private JButton btnAddpC;
+	private JLabel lblQtyA;
+	private JLabel lblQtyB;
+	private JLabel lblQtyC;
 
 //	public static GanttChartFrame myChart;
 	
@@ -59,6 +59,8 @@ public class WelcomeFrame extends JFrame {
 		createEvents();
 		// show the GUI
 		showGui();
+		
+		startDate = new Date();
 		
 	}
 
@@ -73,74 +75,69 @@ public class WelcomeFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-
-		btnOrderButton = new JButton("Order");
-
-		JLabel lblProdA = new JLabel("Product A:");
-		lblProdA.setFont(new Font("Tahoma", Font.BOLD, 12));
-
-		txtProdA = new JTextField();
-
-		txtProdA.setColumns(10);
-
-		lblProdB = new JLabel("Product B:");
-		lblProdB.setFont(new Font("Tahoma", Font.BOLD, 12));
-
-		txtProdB = new JTextField();
-		txtProdB.setColumns(10);
-
-		lblProdC = new JLabel("Product C:");
-		lblProdC.setFont(new Font("Tahoma", Font.BOLD, 12));
-
-		txtProdC = new JTextField();
-		txtProdC.setColumns(10);
 		
 		btnShowChart = new JButton("Show chart");
+		
+		btnAddpA = new JButton("Add A");
+		
+		
+		btnAddpB = new JButton("Add B");
 
-
+		
+		btnAddpC = new JButton("Add C");
+		
+		lblQtyA = new JLabel("0");
+		
+		lblQtyB = new JLabel("0");
+		
+		lblQtyC = new JLabel("0");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(lblProdC, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(lblProdB, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(lblProdA))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtProdC, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtProdB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtProdA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addGap(10)
+							.addComponent(btnAddpA)
+							.addGap(18)
+							.addComponent(lblQtyA))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(42)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnShowChart)
-								.addComponent(btnOrderButton))))
-					.addContainerGap())
+							.addGap(10)
+							.addComponent(btnAddpB)
+							.addGap(18)
+							.addComponent(lblQtyB))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(10)
+							.addComponent(btnAddpC)
+							.addGap(18)
+							.addComponent(lblQtyC))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnShowChart)))
+					.addContainerGap(13, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
+					.addGap(11)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnAddpA)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(4)
+							.addComponent(lblQtyA)))
+					.addGap(20)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnAddpB)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(4)
+							.addComponent(lblQtyB)))
+					.addGap(20)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblProdA)
-						.addComponent(txtProdA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnAddpC)
+						.addComponent(lblQtyC))
 					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblProdB, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtProdB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblProdC, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtProdC, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(btnOrderButton)
-					.addPreferredGap(ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
 					.addComponent(btnShowChart)
-					.addGap(49))
+					.addContainerGap(285, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 
@@ -148,34 +145,28 @@ public class WelcomeFrame extends JFrame {
 
 	// All the code for creating events
 	private void createEvents() {
-
-		btnOrderButton.addActionListener(new ActionListener() {
+		
+		btnAddpA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String qtyProdA = txtProdA.getText();
-				String qtyProdB = txtProdB.getText();
-				String qtyProdC = txtProdC.getText();
-
-				if (!isInteger(qtyProdA) || !isInteger(qtyProdB) || !isInteger(qtyProdC)) {
-					JOptionPane.showMessageDialog(null, "Please insert integer value!");
-				} else {
-					qtyA = Integer.parseInt(qtyProdA);
-					qtyB = Integer.parseInt(qtyProdB);
-					qtyC = Integer.parseInt(qtyProdC);
-
-					// What to do with Prod A value
-					String displayString = "Prod A qty: " + qtyA + "\nProd B qty: " + qtyB + "\nProd C qty: " + qtyC;
-					// shows what qty has been chosen
-					JOptionPane.showMessageDialog(null, displayString);
-					
-					// create a time reference for OH agents
-					startDate = new Date();
-
-					// Create PH agents
-					Jade.addPhAgent(qtyA, "A");
-					Jade.addPhAgent(qtyB, "B");
-					Jade.addPhAgent(qtyC, "C");
-					
-				}
+				qtyA +=1;
+				Jade.addPhAgent(qtyA, "A");
+				lblQtyA.setText(Integer.toString(qtyA));
+			}
+		});
+		
+		btnAddpB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				qtyB +=1;
+				Jade.addPhAgent(qtyB, "B");
+				lblQtyB.setText(Integer.toString(qtyB));
+			}
+		});
+		
+		btnAddpC.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				qtyC +=1;
+				Jade.addPhAgent(qtyC, "C");
+				lblQtyC.setText(Integer.toString(qtyC));
 			}
 		});
 		

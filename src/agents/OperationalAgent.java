@@ -18,6 +18,7 @@ import java.util.*;
 
 import behaviours.InfoAboutWinningOH;
 import behaviours.OperationalAgentBehaviour;
+import behaviours.TaTimeHandler;
 import behaviours.WorkAcceptenceHandler;
 import behaviours.WorkAnnouncementHandler;
 
@@ -43,6 +44,7 @@ public class OperationalAgent extends Agent {
 	
 	public static int priceA;
 	public String requiredSkill;
+	public int taTime;
 	
 	// Put agent initialisations here
 	protected void setup() {
@@ -81,12 +83,12 @@ public class OperationalAgent extends Agent {
 		
 		// Handle the work offers issued by TH Agent
 		addBehaviour(new WorkAnnouncementHandler(this, skills));
+		// Handle info about TH agent occupied time
+		addBehaviour(new TaTimeHandler(this));
 		// What to do once an accept proposal from TH agent has been received
 		addBehaviour(new WorkAcceptenceHandler(this));
 		// receive inform messages about the offer that won from other OH agents
 		addBehaviour(new InfoAboutWinningOH(this));
-		
-		
 	}
 
 	// Put agent clean-up operations here
