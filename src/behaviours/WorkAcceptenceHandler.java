@@ -32,18 +32,12 @@ public class WorkAcceptenceHandler extends CyclicBehaviour {
 			ACLMessage reply = msg.createReply(); // create a reply to confirm to TH agent that the item is still available and will be sold
 			Integer price = (Integer) opA.priceCatalogue.get(requiredSkill); // get the price that was offered 
 //			System.out.println("Accepted proposal price: " + price);
-//			System.out.println("that====================== ------------------------------------------------------------------------");
-			
-			
-//			Integer priceIncludingTaTIme = price + opA.taTime;
-//			System.out.println("Accepted proposal price including TH agent time : " + priceIncludingTaTIme);
 					
-			
 			// Accept-proposal message means that it is the best price
 			// check if the received required skill is still in OH agents catalogue, and it has a price
 			if (price != null) {
 				reply.setPerformative(ACLMessage.INFORM); // send an inform message to TH, to inform that the deal is done
-				System.out.println("Work sold to agent " + msg.getSender().getLocalName());
+//				System.out.println("Work sold to agent " + msg.getSender().getLocalName());
 			
 				List<Object> list = new ArrayList<Object>();// create a list {requiredSkill, estimatedEndTime}
 				list.add(requiredSkill);
@@ -53,9 +47,11 @@ public class WorkAcceptenceHandler extends CyclicBehaviour {
 				opA.hm.put(msg.getSender().getLocalName(), list);// place the task in OH task list (th_name: {requiredSkill, estimatedEndTime})
 				
 				// create a new task
-				Main.myChart.addTask(myAgent.getLocalName(),msg.getSender().getLocalName(), price + opA.taTime, (Integer) opA.catalogue.get(requiredSkill));
+				Main.myChart.addTask(myAgent.getLocalName(),msg.getSender().getLocalName(), price, (Integer) opA.catalogue.get(requiredSkill));
 				
 				System.out.println(myAgent.getLocalName() + " operation sequence: " + opA.operationSequence);
+				
+				opA.OHTime = price; // add to OH time, how long it takes to do the requiredSkill
 				
 			} else {
 				// The requested book has been sold to another buyer in the meanwhile .

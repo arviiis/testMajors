@@ -32,7 +32,7 @@ public class TaskAgent extends Agent {
 	private String serviceType;
 	private String requiredSkill;
 	
-	public int taTime = 0; // total time it takes to execute all the accepted tasks
+	public int thTime = 0; // total time it takes to execute all the accepted tasks
 //	private int requestInterval = 5000;
 
 	protected void setup() {
@@ -43,7 +43,7 @@ public class TaskAgent extends Agent {
 		String[] productInfo = (String[]) args[1];// info about the product
 		
 		// 2. Printout a welcome message
-		System.out.println("\nTask agent for product \"" + type + "\": \"" + getAID().getName() + "\" is ready.");
+		System.out.println("Task agent for product \"" + type + "\": \"" + getAID().getName() + "\" is ready.");
 
 //		for (int i = 0; i < productInfo.length; i++) {
 //			System.out.println(i + "th list member is: "+ productInfo[i]);
@@ -61,7 +61,6 @@ public class TaskAgent extends Agent {
 		// 5. Add TH agent behaviour
 		// Iterate over services and skills necessary and find appropriate sellers
 		SequentialBehaviour THbehaviour = new SequentialBehaviour(this);
-		System.out.println("");
 
 		// add sequential behaviours so that the list of operations is made in the correct order
 		for (int i = 0; i < productInfo.length; i=i+2) {
@@ -71,39 +70,20 @@ public class TaskAgent extends Agent {
 			requiredSkill = productInfo[i+1]; // 1st, 3rd, 5th etc.
 	
 //			System.out.println("\n" + getAID().getLocalName() + " looking for service: " + serviceType);
-//			System.out.println(getAID().getLocalName() + " negotiation start time: " + WelcomeFrame.startDate);
 			
 			// get all the agents that offer the service
 			availableAgents = searchDF(serviceType);
-			System.out.print(serviceType + " agents available for " + getAID().getLocalName() + ": ");
-			for (int j = 0; j < availableAgents.length; j++)
-				System.out.print(availableAgents[j].getLocalName() + ",  ");
-			System.out.println();
+//			System.out.print(serviceType + " agents available for " + getAID().getLocalName() + ": ");
+//			for (int j = 0; j < availableAgents.length; j++)
+//				System.out.print(availableAgents[j].getLocalName() + ",  ");
+//			System.out.println();
 			
 			// request price offers from OH Agents
 			THbehaviour.addSubBehaviour(new WorkRequestPerformer(this, availableAgents, requiredSkill));
 			
-//			addBehaviour(new WorkRequestPerformer(this, availableAgents, requiredSkill));
 		}
 
-		addBehaviour(THbehaviour);
-
-		// run the behaviour periodically
-//		addBehaviour(new TickerBehaviour(this, requestInterval) {
-//			protected void onTick() {
-//				System.out.println("\n" + getAID().getLocalName() + " looking for service: " + serviceType);
-//				// get all the agents that offer the service
-//				availableAgents = searchDF(serviceType);
-//				System.out.print(serviceType + " agents available for " + getAID().getLocalName() + ": ");
-//				for (int i = 0; i < availableAgents.length; i++)
-//					System.out.print(availableAgents[i].getLocalName() + ",  ");
-//				System.out.println();
-//				// request price offers from OH Agents
-//				addBehaviour(new WorkRequestPerformer(availableAgents, requiredSkill));
-//			}
-//		});
-
-		
+		addBehaviour(THbehaviour);		
 	}
 
 	// what to do when agent dies
@@ -168,11 +148,6 @@ public class TaskAgent extends Agent {
 		sd.setType(serviceType);
 		sd.setName(getLocalName());
 		dfd.setName(getAID());
-//		// set service properties
-//		Property p = new Property();
-//		p.setName("product");
-//		p.setValue(products);
-//		sd.addProperties(p);
 
 		try {
 			// tests if there are old duplicate DF entries before adding a new one

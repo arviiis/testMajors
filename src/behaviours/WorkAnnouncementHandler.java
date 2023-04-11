@@ -47,9 +47,9 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 			if (hasSkill(skills, requiredSkill)) {
 				// check if there is a time slot in the schedule
 				if (i) {
-					// calculate price
-					price = getPrice(WelcomeFrame.startDate, opA.operationSequence, opA.catalogue, requiredSkill); // calculate
-																													// price
+//					price = getPrice(WelcomeFrame.startDate, opA.operationSequence, opA.catalogue, requiredSkill); // calculate price
+					price = getPrice(opA.OHTime, opA.thTime, requiredSkill); //calculate price
+					
 					// send a proposal
 					reply.setPerformative(ACLMessage.PROPOSE);
 					reply.setContent(Integer.toString(price));
@@ -67,7 +67,6 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 						opA.priceCatalogue.put(requiredSkill, price);
 //						System.out.println(myAgent.getLocalName() + " price catalogue: " + opA.priceCatalogue);
 					}
-
 				}
 			} else {
 				// The OH cannot complete the wo
@@ -101,47 +100,23 @@ public class WorkAnnouncementHandler extends CyclicBehaviour {
 		return false;
 	}
 
-	// calculate the price based on the estimate of "when the OH agent will finish the proposed task"
-	private int getPrice(Date startDate, Hashtable operationSequence, Hashtable catalogue, String requiredSkill) {
-
-		String ta; // task agent name
-		String skill; // skill that needs to be completed for this TA
-
-		int skillMfgTime; // how long it takes to complete the skill
-		int totalTime = 0; // how long it takes to complete all the tasks for OH
-		int taOccupiedTime; // time that the TH agent is already occupied. To avoid 2 tasks executed at the same time
-
-		int EstimateEndTime;
-
-		Enumeration<String> enumeration = operationSequence.keys();
-		int requiredSkillMfgTime = (Integer) catalogue.get(requiredSkill);
-
-		if (!operationSequence.isEmpty()) {
-			System.out.println(myAgent.getLocalName() + " Operation sequence: " + operationSequence.values());
+	// calculate the price based on the estimate of "when the OH agent will finish
+	// the proposed task"
+	private int getPrice(int ohTime, int thTime, String requiredSkill) {
+		int taskFinishedTime;
+		int requiredSkillMfgTime = (Integer) opA.catalogue.get(requiredSkill);
+		
+		if (thTime>ohTime) {
+			taskFinishedTime = (thTime + requiredSkillMfgTime);
 		}
-
-		// get the total mfg time for all the actions that the OH agent has already agreed to take
-		while (enumeration.hasMoreElements()) {
-			ta = enumeration.nextElement();
-//			System.out.println("Next element is: " + ta);
-			skill = (String) operationSequence.get(ta);
-//			System.out.println("Its value is: " + skill);
-			skillMfgTime = (Integer) catalogue.get(skill); // get the mfg time for the skill that is in the operation
-															// list
-//			System.out.println("This skill mfg time: " + skillMfgTime);
-			totalTime += skillMfgTime; // sum up how long it will take to complete all the tasks
-//			System.out.println("Total mfg time is: " + totalTime);
+		else {
+			taskFinishedTime = (ohTime + requiredSkillMfgTime);
 		}
-
-//		System.out.println(myAgent.getLocalName() + " total mfg time: " + totalTime + " seconds!");
-
-		EstimateEndTime = startDate.getHours() * 3600 + startDate.getMinutes() * 60 + startDate.getSeconds() + totalTime + requiredSkillMfgTime;
-//		System.out.println(myAgent.getLocalName() + " estimated end time: " + EstimateEndTime + " seconds!");
-		return EstimateEndTime;
-
-//		// generate random price for the work
-//		int price = ThreadLocalRandom.current().nextInt(0, 30 + 1);
-//		return price;
-
+//		System.out.println(myAgent.getLocalName() + " price breakdown: \n"
+//				+ "	OH time: " + ohTime + "\n"
+//				+ "	TH time: " + thTime + "\n"
+//				+ "	Time to complete the required skill: " + requiredSkillMfgTime + "\n"
+//				+ "	Time to finish the task (price): "+ taskFinishedTime);
+		return taskFinishedTime;
 	}
 }

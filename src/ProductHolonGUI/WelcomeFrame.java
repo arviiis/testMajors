@@ -135,9 +135,9 @@ public class WelcomeFrame extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnAddpC)
 						.addComponent(lblQtyC))
-					.addGap(18)
+					.addGap(28)
 					.addComponent(btnShowChart)
-					.addContainerGap(285, Short.MAX_VALUE))
+					.addContainerGap(337, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 

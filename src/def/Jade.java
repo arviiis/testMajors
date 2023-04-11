@@ -17,6 +17,7 @@ public class Jade {
 	static AgentController ac;
 
 	int shAgent_qty = 1;
+	
 
 	public Jade() {
 		runJade();
@@ -126,17 +127,17 @@ public class Jade {
 		String[] skills2 = { "pB" };
 		String[] skills3 = { "pC" };
 		String[] skills4 = { "pA", "pB" };
-		String[] skills5 = { "pA" };
-		String[] skills6 = { "pA", "pB", "pC", "pA" };
+		String[] skills5 = { "pA", "pB" };
+		String[] skills6 = { "pC" };
 
 		// how long it takes to complete each skill in seconds
 		int[] mfgTime = { 0 };
-		int[] mfgTime1 = { 25 };
-		int[] mfgTime2 = { 45 };
-		int[] mfgTime3 = { 30 };
-		int[] mfgTime4 = { 35, 30 };
-		int[] mfgTime5 = { 10 };
-//		int[] mfgTime6 = { 10, 11, 12, 13 };
+		int[] mfgTime1 = { 20 };
+		int[] mfgTime2 = { 30 };
+		int[] mfgTime3 = { 40 };
+		int[] mfgTime4 = { 30, 35 };
+		int[] mfgTime5 = { 10, 20 };
+		int[] mfgTime6 = { 15};
 
 		addOhAgent(1, "stacker", skills1, mfgTime1);
 		addOhAgent(2, "stacker", skills2, mfgTime2);
@@ -144,7 +145,7 @@ public class Jade {
 		addOhAgent(4, "stacker", skills4, mfgTime4);
 //		addOhAgent(7, "stacker", skills6, mfgTime6);
 
-		addOhAgent(5, "wrapper", skills4, mfgTime4);
+		addOhAgent(5, "wrapper", skills5, mfgTime5);
 		addOhAgent(6, "wrapper", skills3, mfgTime5);
 //		addOhAgent(6, "mover", skills, mfgTime);
 		

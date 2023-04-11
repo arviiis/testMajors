@@ -19,7 +19,6 @@ public class ProductAgent extends Agent {
 	private String[] productAInfo = {"stacker", "pA", "stacker", "pB", "wrapper", "pA"};
 	private String[] productBInfo = {"stacker", "pB", "wrapper", "pB"};
 	private String[] productCInfo = {"stacker", "pC", "wrapper", "pC"};
-//	private String[] productDInfo = {"stacker", "pA", "stacker", "pB", "wrapper", "pD"};
 	
 
 	public void setup() {

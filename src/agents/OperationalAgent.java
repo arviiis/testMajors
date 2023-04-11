@@ -44,7 +44,9 @@ public class OperationalAgent extends Agent {
 	
 	public static int priceA;
 	public String requiredSkill;
-	public int taTime;
+	public int thTime;
+	
+	public int OHTime = 0;
 	
 	// Put agent initialisations here
 	protected void setup() {

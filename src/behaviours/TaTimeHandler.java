@@ -18,18 +18,14 @@ public class TaTimeHandler extends CyclicBehaviour {
 	}
 
 	public void action() {
-		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
+		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		ACLMessage msg = myAgent.receive(mt); // receive INFORM msg from TH agent
 
 		if (msg != null) {
-			opA.taTime = Integer.parseInt(msg.getContent());
-//			System.out.println(myAgent.getLocalName() + " received TH time");
+			opA.thTime = Integer.parseInt(msg.getContent());
+//			System.out.println("TA time in " + myAgent.getLocalName() + " memory: "+ opA.thTime);
 			ACLMessage reply = msg.createReply();
-			reply.setPerformative(ACLMessage.AGREE);
-			
-			int skillMfgTime = (Integer) opA.catalogue.get(opA.requiredSkill);
-//			System.out.println("Time added to TH occupied time: "+ skillMfgTime);
-			reply.setContent(Integer.toString(skillMfgTime));
+			reply.setPerformative(ACLMessage.INFORM);
 			myAgent.send(reply);
 		} else {
 			block();
